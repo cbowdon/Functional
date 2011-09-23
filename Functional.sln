@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Memoize", "Memoize\Memoize.csproj", "{13C428E0-89D9-40FC-9A31-157C091E3365}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MemoizeTests", "MemoizeTests\MemoizeTests.csproj", "{492A1781-C644-4E8D-9275-BEAA4EE49C9B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{13C428E0-89D9-40FC-9A31-157C091E3365}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13C428E0-89D9-40FC-9A31-157C091E3365}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13C428E0-89D9-40FC-9A31-157C091E3365}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13C428E0-89D9-40FC-9A31-157C091E3365}.Release|Any CPU.Build.0 = Release|Any CPU
+		{492A1781-C644-4E8D-9275-BEAA4EE49C9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{492A1781-C644-4E8D-9275-BEAA4EE49C9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{492A1781-C644-4E8D-9275-BEAA4EE49C9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{492A1781-C644-4E8D-9275-BEAA4EE49C9B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Memoize\Memoize.csproj
+	EndGlobalSection
+EndGlobal
