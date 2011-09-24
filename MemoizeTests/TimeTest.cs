@@ -31,7 +31,7 @@ namespace MemoizeTests
 			
 			// time it
 			stopwatch.Start();
-			fib(target);
+			var rawR = fib(target);
 			stopwatch.Stop();
 			var rawT = stopwatch.ElapsedTicks;
 			stopwatch.Reset();
@@ -41,10 +41,59 @@ namespace MemoizeTests
 			
 			// time it
 			stopwatch.Start();
-			fib(target);
+			var memR = fib(target);
 			stopwatch.Stop();
 			var memT = stopwatch.ElapsedTicks;
-												
+				
+			Assert.AreEqual(rawR, memR);
+			
+			return rawT > memT? true : false;
+		}
+		
+		/// <summary>
+		/// Imaginatively just does two fibs
+		/// </summary>
+		/// <returns>
+		/// Bool for mem faster than raw
+		/// </returns>
+		/// <param name='target1'>
+		/// Number to count to
+		/// </param>
+		/// <param name='target2'>
+		/// Second number to count to
+		/// </param>
+		public bool FactorialTest (int target1)
+		{
+			Stopwatch stopwatch = new Stopwatch();
+			
+			// raw dual fib function
+			Func<int, int> fact = n => n > 1? n*fact(n-1) : 1;			
+			
+			Console.WriteLine("FACT: {0}", fact(target1));
+			
+			// time it
+			stopwatch.Start();
+			var rawR = fact(target1);
+			stopwatch.Stop();
+			var rawT = stopwatch.ElapsedTicks;
+			
+			// mem dual fib function
+			fact = fact.Memoize();
+			
+			fact(target1);
+			
+			// time it			
+			stopwatch.Start();
+			var memR = fact(target1);
+			stopwatch.Stop();
+			var memT = stopwatch.ElapsedTicks;
+									
+			Console.WriteLine("raw: {0}\t mem: {1}", rawT, memT);
+			
+			
+			Assert.AreEqual(rawR, memR);
+			Console.WriteLine("result: {0}", rawR);
+			
 			return rawT > memT? true : false;
 		}
 		
@@ -55,6 +104,7 @@ namespace MemoizeTests
 		public void CheapTest ()
 		{			
 			Assert.IsFalse(FibTest(10));
+			Assert.IsFalse(FactorialTest(10));
 		}
 				
 		/// <summary>
@@ -64,6 +114,7 @@ namespace MemoizeTests
 		public void ExpensiveTest ()
 		{
 			Assert.IsTrue(FibTest(35));
+			Assert.IsTrue(FactorialTest(16));
 		}
 	}
 }

@@ -26,15 +26,35 @@ namespace Memoize
 		// Wes' original function	
 		// using 'this' keyword so that the method can be employed as an extension
 		{
-			var hash = new Dictionary<T1, R>();
+			var hash = new Dictionary<T1, R> ();
 			return a =>
 			{
 				R value;
-				if (hash.TryGetValue(a, out value)) {
+				if (hash.TryGetValue (a, out value)) {
 					return value;
 				} else {
-					value = f(a);
-					hash.Add(a, value);
+					value = f (a);
+					hash.Add (a, value);
+					return value;
+				}
+			};				
+		}
+		
+		public static Func<T1, T2, R> Memoize<T1, T2, R> (this Func<T1, T2, R> f)
+		// Extended for two args
+		{			
+			
+			var hash = new Dictionary<int, R> ();
+			
+			return (a, b) =>
+			{
+				int z = a.GetHashCode() ^ b.GetHashCode();
+				R value;
+				if (hash.TryGetValue (z, out value)) {
+					return value;
+				} else {
+					value = f (a, b);
+					hash.Add (z, value);
 					return value;
 				}
 			};				
