@@ -1,120 +1,85 @@
 using System;
 using System.Diagnostics;
+using System.Threading;
 using Memoize;
 using NUnit.Framework;
 
 namespace MemoizeTests
 {
 	/// <summary>
-	/// The Memoize function is tested for speed.
-	/// Looking up a value is more expensive that performing a simple sum,
-	/// so Memoize() is only useful when the sum is complex
+	/// The Memoize function is tested for speed and accuracy
 	/// </summary>
 	[TestFixture()]
 	public class TimeTest
 	{
 		/// <summary>
-		/// Tests memoization on fibonacci function
+		/// General memoization test routine
 		/// </summary>
 		/// <returns>
-		/// Bool on whether raw or mem was faster
+		/// True if mem'd function is faster
 		/// </returns>
-		/// <param name='target'>
-		/// Fibonacci number to test to
+		/// <param name='f'>
+		/// The function to test
 		/// </param>
-		public bool FibTest (int target)
+		public bool MemzTest (Func<int, int> f, int target)
 		{
-			Stopwatch stopwatch = new Stopwatch();
+			Stopwatch stopwatch = new Stopwatch ();
 						
-			// raw fib function
-			Func<int, int> fib = n => n > 1? fib(n-1)+fib(n-2) : n;
-			
-			// time it
-			stopwatch.Start();
-			var rawR = fib(target);
-			stopwatch.Stop();
+			// time it raw
+			stopwatch.Start ();
+			var rawR = f (target);
+			stopwatch.Stop ();
 			var rawT = stopwatch.ElapsedTicks;
-			stopwatch.Reset();
+			stopwatch.Reset ();
 						
-			// memoized fib function
-			fib = fib.Memoize();
+			// memoized function
+			f = f.Memoize ();
 			
-			// time it
-			stopwatch.Start();
-			var memR = fib(target);
-			stopwatch.Stop();
-			var memT = stopwatch.ElapsedTicks;
+			// time it memoized:
+			
+			// first run : same speed
+			stopwatch.Start ();
+			f (target);
+			stopwatch.Stop ();
+			var memT1 = stopwatch.ElapsedTicks;
+			stopwatch.Reset ();
+			
+			// second run: faster			
+			stopwatch.Start ();
+			var memR = f (target);
+			stopwatch.Stop ();
+			var memT2 = stopwatch.ElapsedTicks;
 				
-			Assert.AreEqual(rawR, memR);
+			// Accurate?
+			Assert.AreEqual (rawR, memR);
 			
-			return rawT > memT? true : false;
+			// Mem is faster?
+//			Console.WriteLine("{0}\t{1}\t{2}", rawT, memT1, memT2);			
+			return rawT > memT2 ? true : false;
 		}
 		
 		/// <summary>
-		/// Imaginatively just does two fibs
+		/// Well let's see then
 		/// </summary>
-		/// <returns>
-		/// Bool for mem faster than raw
-		/// </returns>
-		/// <param name='target1'>
-		/// Number to count to
-		/// </param>
-		/// <param name='target2'>
-		/// Second number to count to
-		/// </param>
-		public bool FactorialTest (int target1)
-		{
-			Stopwatch stopwatch = new Stopwatch();
+		[Test()]
+		public void SingleArgTestFunctions ()
+		{						
+			Func<int, int > fib = n => n > 1 ? fib (n - 1) + fib (n - 2) : n;
+			Func<int, int > fact = n => n > 1 ? n * fact (n - 1) : 1;			
+			Func<int, int > sleeper = n => {
+				Thread.Sleep (10);
+				return n > 1 ? sleeper (n - 1) + sleeper (n - 2) : n;
+			};
 			
-			// raw dual fib function
-			Func<int, int> fact = n => n > 1? n*fact(n-1) : 1;			
-			
-			Console.WriteLine("FACT: {0}", fact(target1));
-			
-			// time it
-			stopwatch.Start();
-			var rawR = fact(target1);
-			stopwatch.Stop();
-			var rawT = stopwatch.ElapsedTicks;
-			
-			// mem dual fib function
-			fact = fact.Memoize();
-			
-			fact(target1);
-			
-			// time it			
-			stopwatch.Start();
-			var memR = fact(target1);
-			stopwatch.Stop();
-			var memT = stopwatch.ElapsedTicks;
-									
-			Console.WriteLine("raw: {0}\t mem: {1}", rawT, memT);
-			
-			
-			Assert.AreEqual(rawR, memR);
-			Console.WriteLine("result: {0}", rawR);
-			
-			return rawT > memT? true : false;
+			Assert.IsTrue (MemzTest (fib, 10)); 
+			Assert.IsTrue (MemzTest (fact, 10));
+			Assert.IsTrue (MemzTest (sleeper, 10)); 
 		}
 		
-		/// <summary>
-		/// Not expecting any speed increase here.
-		/// </summary>
 		[Test()]
-		public void CheapTest ()
-		{			
-			Assert.IsFalse(FibTest(10));
-			Assert.IsFalse(FactorialTest(10));
-		}
-				
-		/// <summary>
-		/// Should be faster.
-		/// </summary>
-		[Test()]
-		public void ExpensiveTest ()
+		public void MultiArgTestFunctions ()
 		{
-			Assert.IsTrue(FibTest(35));
-			Assert.IsTrue(FactorialTest(16));
+			Assert.IsTrue(false);
 		}
 	}
 }
