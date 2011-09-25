@@ -2,10 +2,6 @@ What it does:
 - provides a memoization function for C#
 - essentially translates the following Lisp (Racket) code into C#:
 
-Status:
-- just started
-- only single-argument memoization working and tested
-
 #lang racket
 (define (memoize proc)
   (let ([table (make-hash)])
@@ -17,15 +13,20 @@ Status:
               (hash-set! table x ans)
               ans))))))
 
+Status:
+- have a Memoize() extension function that supports up to 4 args (any type)
+- unit-tested for speed and correctness with functions that sleep
+- really ought to make it support up to 16 args
+
 Background:
 Wes Dyer (blogs.msdn.com/b/wesdyer) wrote an excellent blog post in 2007 that suggested a memoization function for C#. In the post he suggested that you could generalize this for functions with n arguments by "creating composite keys of n fields that are used in the dictionary". 
 
-This is a little project to do just that. Hopefully it will be widely useful.
+This is a little project to do just that. I'm not adding an awful lot, but hopefully the result will be widely useful.
 
 Rough guide to files:
 
 - Memoize : library containing a single file with the Memoize extension method
-- MemoizeTests : NUnit project of tests for speed and accuracy
+- MemoizeTests : NUnit project of tests for speed and correctness
 
 - memoize.rkt : example of memoization in a more functional language (Racket)
 - memoise-test.rkt : unit test for the Racket code
