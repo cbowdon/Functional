@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 /// <summary>
 /// This builds on a blog post by Wes Dyer ("Yet Another Language Geek")
-/// where he gives the following memoization function and suggests that
+/// where he gives the following memoiargsKeyation function and suggests that
 /// it could be generalised to multiple-argument functions
 /// </summary>
 namespace Memoize
@@ -44,17 +44,66 @@ namespace Memoize
 		// Extended for two args
 		{			
 			
-			var hash = new Dictionary<int, R> ();
+			var hash = new Dictionary<object, R> ();
 			
 			return (a, b) =>
 			{
-				int z = a.GetHashCode() ^ b.GetHashCode();
+				object[] argsKey = new object[2];
+				argsKey[0] = a;
+				argsKey[1] = b;
 				R value;
-				if (hash.TryGetValue (z, out value)) {
+				if (hash.TryGetValue (argsKey, out value)) {
 					return value;
 				} else {
 					value = f (a, b);
-					hash.Add (z, value);
+					hash.Add (argsKey, value);
+					return value;
+				}
+			};				
+		}
+		
+		public static Func<T1, T2, T3, R> Memoize<T1, T2, T3, R> (this Func<T1, T2, T3, R> f)
+		// Extended for three args
+		{			
+			
+			var hash = new Dictionary<object, R> ();
+			
+			return (a, b, c) =>
+			{
+				object[] argsKey = new object[3];
+				argsKey[0] = a;
+				argsKey[1] = b;
+				argsKey[2] = c;
+				R value;
+				if (hash.TryGetValue (argsKey, out value)) {
+					return value;
+				} else {
+					value = f (a, b, c);
+					hash.Add (argsKey, value);
+					return value;
+				}
+			};				
+		}
+		
+		public static Func<T1, T2, T3, T4, R> Memoize<T1, T2, T3, T4, R> (this Func<T1, T2, T3, T4, R> f)
+		// Extended for four args
+		{			
+			
+			var hash = new Dictionary<object, R> ();
+			
+			return (a, b, c, d) =>
+			{
+				object[] argsKey = new object[4];
+				argsKey[0] = a;
+				argsKey[1] = b;
+				argsKey[2] = c;
+				argsKey[3] = d;
+				R value;
+				if (hash.TryGetValue (argsKey, out value)) {
+					return value;
+				} else {
+					value = f (a, b, c, d);
+					hash.Add (argsKey, value);
 					return value;
 				}
 			};				
